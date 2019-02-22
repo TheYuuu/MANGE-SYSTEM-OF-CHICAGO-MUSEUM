@@ -1,6 +1,12 @@
 <template>
   <div id="app">
     <layout msg="Welcome to Your Vue.js App"/>
+    <audio class="success"
+      src="../static/media/bgm.mp3"
+      autoplay="autoplay"
+            controls="controls"
+       preload="auto">
+       </audio>
   </div>
 </template>
 

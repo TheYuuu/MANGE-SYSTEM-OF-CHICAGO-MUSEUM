@@ -8,11 +8,11 @@
 
 <script>
 export default {
-  name: "ObjectCategory",
+  name: 'ObjectCategory',
   props: {
     msg: String
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

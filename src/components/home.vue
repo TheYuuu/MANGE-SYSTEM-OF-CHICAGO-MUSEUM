@@ -34,13 +34,13 @@
 
 <script>
 export default {
-  name: "layout",
-  data:function(){
+  name: 'layout',
+  data: function () {
     return {
-      show:true
+      show: true
     }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

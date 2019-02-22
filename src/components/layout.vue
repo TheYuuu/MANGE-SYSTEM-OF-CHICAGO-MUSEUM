@@ -36,36 +36,43 @@
         <router-view v-show="Mainshow"></router-view>
       </keep-alive>
     </transition>
+    <div class="footbar">
+      <a href="http://www.shuaibiyu.cn">ShuaiBiYu Studying</a>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "layout",
-  data: function() {
+  name: 'layout',
+  data: function () {
     return {
       Titleshow: false,
       Mainshow: false
-    };
-  },
-  methods: {
-    afterLeave: function() {
-      this.Mainshow = true;
     }
   },
-  mounted() {
-    this.Titleshow = true;
-    this.Mainshow = true;
+  methods: {
+    afterLeave: function () {
+      this.Mainshow = true
+    }
+  },
+  mounted () {
+    this.Titleshow = true
+    this.Mainshow = true
   },
   computed: {},
   watch: {
-    $route(to, from) {
-        if (from.path=="/ObjectCategory" || from.path=="/StoryLine" || from.path=="/ThemeColor" && to.path=='/welcome'){
-          this.Titleshow = true;
-        }
+    $route (to, from) {
+      if (
+        from.path === '/ObjectCategory' ||
+        from.path === '/StoryLine' ||
+        (from.path === '/ThemeColor' && to.path === '/welcome')
+      ) {
+        this.Titleshow = true
+      }
     }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -97,7 +104,7 @@ export default {
 }
 
 .col-3 {
-  width: 33.333333%;
+  width: 32%;
   display: inline-block;
   text-align: center;
   font-size: 1.5rem;
@@ -117,5 +124,19 @@ export default {
 
 .slide-left-enter-active {
   transition-delay: 0.5s;
+}
+
+.footbar {
+  width: 100vw;
+  position: fixed;
+  bottom: 0px;
+}
+.footbar a {
+  display: inline-block;
+  width:100%;
+  text-align: center;
+  padding-top: 20px;
+  color: #99a2aa;
+  font: 12px Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif;
 }
 </style>
