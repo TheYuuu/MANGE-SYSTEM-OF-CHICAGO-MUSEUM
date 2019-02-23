@@ -1,17 +1,12 @@
 <template>
-  <div class="ThemeColor">
-    <br>
-    <br>
-    <br>
-    <br>
-
-    <p>welcome</p>
+  <div class="welcome">
+    asd
   </div>
 </template>
 
 <script>
 export default {
-  name: 'layout',
+  name: 'welcome',
   props: {
     msg: String
   }
@@ -20,7 +15,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-p{
-  text-align: center;
+.welcome{
+  width: 100%;
+  height: 100%;
+  background: red;
 }
 </style>
