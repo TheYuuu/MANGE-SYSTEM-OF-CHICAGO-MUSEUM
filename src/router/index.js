@@ -7,13 +7,13 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
-      redirect: '/welcome'
+      path: '/'
+      // redirect: '/welcome'
     },
-    {
-      path: '/welcome',
-      component: resolve => require(['../components/Pages/welcome'], resolve)
-    },
+    // {
+    //   path: '/welcome',
+    //   component: resolve => require(['../components/Pages/welcome'], resolve)
+    // },
     {
       path: '/ObjectCategory',
       component: resolve => require(['../components/Pages/ObjectCategory'], resolve)

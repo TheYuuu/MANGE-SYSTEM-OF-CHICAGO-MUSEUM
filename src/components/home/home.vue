@@ -29,12 +29,13 @@
             </router-link>
           </div>
         </div>
+        <welcome></welcome>
       </div>
     </transition>
     <transition enter-active-class='animated fadeOutDown' leave-active-class='animated fadeOutUp'>
-      <div class='title-box-2'>
+      <div class='title-box-2' v-show='Mainshow'>
         <keep-alive>
-          <router-view v-show='Mainshow'></router-view>
+          <router-view></router-view>
         </keep-alive>
       </div>
     </transition>
@@ -42,9 +43,13 @@
 </template>
 
 <script>
+import welcome from '../Pages/welcome'
+import ThemeColor from '../Pages/ThemeColor'
+
 export default {
   name: 'home',
   components: {
+    welcome
   },
   data: function () {
     return {

@@ -1,6 +1,6 @@
 <template>
   <div class="welcome">
-    asd
+    welcome
   </div>
 </template>
 
@@ -17,7 +17,8 @@ export default {
 <style scoped>
 .welcome{
   width: 100%;
-  height: 100%;
-  background: red;
+  height: 400px;
+  background: burlywood;
+  text-align: center;
 }
 </style>
