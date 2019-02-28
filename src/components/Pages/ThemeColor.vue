@@ -6,7 +6,9 @@
       <span class="btn" v-on:click='drawAfter'>After | </span>
       <span class="btn" v-on:click='drawAll'>All</span>
     </div>
-    <svg id="color_svg"></svg>
+    <span class="bgText">123</span>
+    <svg id="color_svg">
+    </svg>
   </div>
 </template>
 
@@ -160,6 +162,21 @@
              return x(new Date(d.s,0,1)) + 20;
            })
            .attr('y',20)
+           .on('mouseover',function(d){
+             d3.select(this)
+               .transition()
+               .duration(200)
+               .attr('opacity','0.3')
+               .attr('stroke','black')
+            d3.select('.bgText').html(d.name)
+           })
+           .on('mouseleave',function(){
+            d3.select(this)
+               .transition()
+               .duration(100)
+               .attr('opacity','0.1')
+               .attr('stroke','none')
+           })
       },
       DrawText(data) {
         const svg = this.svg;
@@ -267,7 +284,6 @@
           .attr("cy", function(d) {
             return y1(d.c);
           })
-          console.log(data.event)
           var rects= svg.selectAll('.bgc').data(data.event);
           
           rects.transition()
@@ -291,6 +307,22 @@
              return x(new Date(d.s,0,1)) + 20;
            })
            .attr('y',20)
+           .attr('height', height/2)
+          .on('mouseover',function(d){
+             d3.select(this)
+               .transition()
+               .duration(200)
+               .attr('opacity','0.3')
+               .attr('stroke','black')
+            d3.select('.bgText').html(d.name)
+           })
+           .on('mouseleave',function(){
+            d3.select(this)
+               .transition()
+               .duration(100)
+               .attr('opacity','0.1')
+               .attr('stroke','none')
+           })
            .transition()
            .duration(interval)
            .attr('fill',function(d){
@@ -300,11 +332,11 @@
            .attr('width',function(d){
              return x(new Date(d.e,0,1)) - x(new Date(d.s,0,1));
            })
-           .attr('height', height/2)
+
 
           rects.exit().transition()
            .duration(interval)
-           .attr('height', 0)
+           .attr('width', 0)
            .remove()
       }
     },
@@ -347,4 +379,13 @@
     cursor: pointer;
   }
   
+  .bgText{
+position: absolute;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 5rem;
+    top: 25%;
+    z-index: -1;
+    white-space: nowrap;
+  }
 </style>
