@@ -36,6 +36,7 @@ export default {
 }
 html {
   font-size: calc(100vw / 65);
+  font-family: Patriciana;
 }
 
 a {
@@ -44,5 +45,10 @@ a {
 a:visited {
   text-decoration: none;
   color: black;
+}
+
+@font-face {
+  font-family: 'Patriciana';
+  src: url('./assets/Patriciana.otf');
 }
 </style>

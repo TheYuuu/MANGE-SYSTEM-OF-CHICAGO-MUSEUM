@@ -41,11 +41,11 @@
       <div class='title-box-2' v-show='Mainshow'>
         <div class='guide' v-on:click='Mainshow = !Mainshow;'>
           <router-link to='/'>
-              <p>Home</p>
+              <p>Back Home</p>
           </router-link>
         </div>
         <keep-alive>
-          <router-view ref='header'></router-view>
+          <router-view></router-view>
         </keep-alive>
       </div>
     </transition>
@@ -85,8 +85,6 @@ export default {
   },
   mounted () {
     this.Titleshow = true
-    console.log(this.$refs.header)
-    console.log(this.$children) 
   },
   computed: {
     Mainopacity (){
@@ -109,6 +107,19 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
+.guide p{
+    position: absolute;
+    top: 10px;
+    border-radius: 0px 10px 10px 0px;
+    padding: 5px;
+    font-size: 20px;
+    font-weight: lighter;
+    background: #efefef;
+    color: white;
+}
+.guide p:hover{
+    box-shadow: 2px 2px 5px #939e9e;
+}
 .home {
   height:calc(100vh - 22px);
   overflow: hidden;
@@ -121,7 +132,6 @@ export default {
   width: 100%;
   height: auto;
   animation:myfirst 1s;
-  /* opacity: 0; */
 }
 
 @keyframes myfirst
@@ -131,7 +141,6 @@ export default {
 }
 
 .welcome-title-1 {
-  font-family: Patriciana;
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
@@ -139,7 +148,6 @@ export default {
   /* margin-top: 1rem; */
 }
 .welcome-title-2 {
-  font-family: Patriciana;
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
@@ -147,10 +155,6 @@ export default {
 }
 .welcome-title-3 {
   padding: 0px 25%;
-}
-@font-face {
-  font-family: 'Patriciana';
-  src: url('../../assets/Patriciana.otf');
 }
 
 .col-3 {
