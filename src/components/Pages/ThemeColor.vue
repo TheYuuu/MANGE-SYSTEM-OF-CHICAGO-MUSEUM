@@ -2,9 +2,9 @@
   <div id="ThemeColor">
     <div class="DateChange">
       <span>Renaissance: </span>
-      <span class="btn" v-on:click= 'drawBefore'>Before | </span>
-      <span class="btn" v-on:click= 'drawAfter'>After | </span>
-      <span class="btn" v-on:click= 'drawAll'>All</span>
+      <span class="btn" v-on:click='drawBefore'>Before | </span>
+      <span class="btn" v-on:click='drawAfter'>After | </span>
+      <span class="btn" v-on:click='drawAll'>All</span>
     </div>
     <svg id="color_svg"></svg>
   </div>
@@ -16,7 +16,7 @@
     name: "layout",
     props: {
       msg: String,
-      data:{}
+      data: {}
     },
     computed: {
       getdata() {
@@ -58,6 +58,7 @@
   
         this.EleTran = this.x(new Date(new Date(data.b).getFullYear() + data.Datapadding, 0, 1)) / 2;
         this.xAxis = d3.axisBottom(this.x);
+        this.y1Axis = d3.axisRight(this.y1);
       },
       DrawAxis(data) {
         const svg = this.svg;
@@ -66,18 +67,36 @@
         const x = this.x;
         const y1 = this.y1;
         const xAxis = this.xAxis;
+        const y1Axis = this.y1Axis;
         const EleTran = 0;
-  
+        const width = this.width;
   
         svg.append("g")
           .attr("class", "axis x_axis")
           .attr("transform", "translate(" + padding + ',' + (height / 2 + padding) + ")")
           .attr("fill", "black")
           .call(xAxis);
+
+        svg.append("g")
+          .attr("class", "axis y1_axis")
+          .attr("transform", "translate(" + (10) + ',' + (padding*2) + ")")
+          .attr("fill", "black")
+          .call(y1Axis);
+          
+        d3.select('.y1_axis')
+          .select('path')
+          .attr('stroke','none')
+        d3.select('.y1_axis')
+          .selectAll('line')
+          .attr('stroke','none')
   
         var linePath = d3.line()
           .x(function(d) {
-            return EleTran + x(new Date(d.Date));
+            if (d.correct) {
+              return EleTran + x(new Date(d.Date)) - x(new Date(1900, 0, 1)) + x(new Date(-1, 0, 1));
+            } else {
+              return EleTran + x(new Date(d.Date));
+            }
           })
           .y(function(d) {
             return y1(d.c);
@@ -106,7 +125,11 @@
           .attr("stroke", 'rgb(255, 146, 56)')
           .attr("fill", "white")
           .attr("cx", function(d) {
-            return EleTran + x(new Date(d.Date));
+            if (d.correct) {
+              return EleTran + x(new Date(d.Date)) - x(new Date(1900, 0, 1)) + x(new Date(-1, 0, 1));
+            } else {
+              return EleTran + x(new Date(d.Date));
+            }
           })
           .attr("cy", function(d) {
             return y1(d.c);
@@ -116,42 +139,27 @@
         const that = this;
         const svg = this.svg;
         const width = this.width;
-  
-        let textA;
-        let textE;
-  
-        // svg.append('g')
-        //   .append('text')
-        //   .text("| After")
-        //   .attr('x', function() {
-        //     textE = this.getComputedTextLength();
-        //     return width / 2 - textE;
-        //   })
-        //   .attr('y', 20)
-        //   .on('click', function() {
-        //     that.Update(data.e)
-        //   })
+        const height = this.height;
+        const x = this.x;
 
-        // svg.append('g')
-        //   .append('text')
-        //   .text("Before ")
-        //   .attr('x', function() {
-        //     textA = this.getComputedTextLength();
-        //     return width / 2 - textE - textA;
-        //   })
-        //   .attr('y', 20)
-        //   .on('click', function() {
-        //     that.Update(data.b)
-        //   })
-  
-        // svg.append('g')
-        //   .append('text')
-        //   .text("Renaissance")
-        //   .attr('x', function() {
-        //     return width / 2 - this.getComputedTextLength() - textE - textA;
-        //   })
-        //   .attr('y', 20)
-  
+        svg.append('g')
+           .selectAll('rect')
+           .data(data.event)
+           .enter()
+           .append('rect')
+           .attr('class','bgc')
+           .attr('fill',function(d){
+             return d.color;
+           })
+           .attr('opacity','0.1')
+           .attr('width',function(d){
+             return x(new Date(d.e,0,1)) - x(new Date(d.s,0,1));
+           })
+           .attr('height', height/2)
+           .attr('x',function(d){
+             return x(new Date(d.s,0,1)) + 20;
+           })
+           .attr('y',20)
       },
       DrawText(data) {
         const svg = this.svg;
@@ -192,7 +200,8 @@
   
         this.EleTran = this.x(new Date(new Date(data.b).getFullYear() + data.Datapadding, 0, 1)) / 2;
         this.xAxis = d3.axisBottom(this.x);
-  
+        this.y1Axis = d3.axisRight(this.y1);
+
         const svg = this.svg;
         const height = this.height;
         const padding = this.padding;
@@ -201,15 +210,32 @@
         const xAxis = this.xAxis;
         const EleTran = 0;
         const interval = this.interval;
+        const y1Axis = this.y1Axis;
   
         svg.select('.x_axis')
           .transition()
           .duration(interval)
           .call(xAxis);
+
+        svg.select('.y1_axis')
+          .transition()
+          .duration(interval)
+          .call(y1Axis);
+        
+        d3.select('.y1_axis')
+          .select('path')
+          .attr('stroke','none')
+        d3.select('.y1_axis')
+          .selectAll('line')
+          .attr('stroke','none')
   
         var linePath = d3.line()
           .x(function(d) {
-            return EleTran + x(new Date(d.Date));
+            if (d.correct) {
+              return EleTran + x(new Date(d.Date)) - x(new Date(1900, 0, 1)) + x(new Date(-1, 0, 1));
+            } else {
+              return EleTran + x(new Date(d.Date));
+            }
           })
           .y(function(d) {
             return y1(d.c);
@@ -232,11 +258,54 @@
           .attr("stroke", 'rgb(255, 146, 56)')
           .attr("fill", "white")
           .attr("cx", function(d) {
-            return EleTran + x(new Date(d.Date));
+            if (d.correct) {
+              return EleTran + x(new Date(d.Date)) - x(new Date(1900, 0, 1)) + x(new Date(-1, 0, 1));
+            } else {
+              return EleTran + x(new Date(d.Date));
+            }
           })
           .attr("cy", function(d) {
             return y1(d.c);
           })
+          console.log(data.event)
+          var rects= svg.selectAll('.bgc').data(data.event);
+          
+          rects.transition()
+           .duration(interval)
+           .attr('fill',function(d){
+             return d.color;
+           })
+           .attr('opacity','0.1')
+           .attr('width',function(d){
+             return x(new Date(d.e,0,1)) - x(new Date(d.s,0,1));
+           })
+           .attr('height', height/2)
+           .attr('x',function(d){
+             return x(new Date(d.s,0,1)) + 20;
+           })
+           .attr('y',20)
+
+          rects.enter().append('rect')
+           .attr('class','bgc')
+           .attr('x',function(d){
+             return x(new Date(d.s,0,1)) + 20;
+           })
+           .attr('y',20)
+           .transition()
+           .duration(interval)
+           .attr('fill',function(d){
+             return d.color;
+           })
+           .attr('opacity','0.1')
+           .attr('width',function(d){
+             return x(new Date(d.e,0,1)) - x(new Date(d.s,0,1));
+           })
+           .attr('height', height/2)
+
+          rects.exit().transition()
+           .duration(interval)
+           .attr('height', 0)
+           .remove()
       }
     },
     mounted() {
@@ -246,8 +315,8 @@
         if (document.getElementById("ThemeColor").offsetWidth != 0) {
           clearInterval(timer);
           this.init(data.all);
+          this.DrawDescription(data.all);
           this.DrawAxis(data.all);
-          this.DrawDescription(data);
         }
       }, 10)
     }
@@ -266,14 +335,16 @@
     width: 100%;
     height: 100%;
   }
-
-  .DateChange{
+  
+  .DateChange {
     position: absolute;
     left: 50%;
     transform: translateX(-60%);
     font-size: 14px;
   }
-  .btn{
+  
+  .btn {
     cursor: pointer;
   }
+  
 </style>
