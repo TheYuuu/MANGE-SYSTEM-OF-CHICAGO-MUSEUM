@@ -13,18 +13,17 @@ export default {
     layout
   },
   mounted() {
-    // axios
-    //   .post("api/fenci", {
-    //     content: "content i am a boy i i"
-    //   })
-    //   .then(function(response) {
-    //     console.log(response);
-    //   })
-    //   .catch(function(error) {
-    //     console.log(error);
-    //   });
-
-
+    var that = this;
+    axios
+      .post("api/dateOri", {
+        p : 1
+      })
+      .then(function(response) {
+        that.$store.dispatch('getOridataAction',response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   }
 };
 </script>
@@ -37,5 +36,13 @@ export default {
 }
 html {
   font-size: calc(100vw / 65);
+}
+
+a {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
+  color: black;
 }
 </style>

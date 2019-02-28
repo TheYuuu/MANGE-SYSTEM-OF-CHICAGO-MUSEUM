@@ -11,7 +11,7 @@
         <p class='welcome-title-2'>Organized By</p>
         <div class='welcome-title-3'>
           <div class='col-3' v-on:click='Titleshow = !Titleshow'>
-            <router-link to='/ObjectCategory'>
+            <router-link to='ObjectCategory'>
               <p class='sm-p'>Object</p>
               <p>category</p>
             </router-link>
@@ -32,13 +32,25 @@
         <welcome></welcome>
       </div>
     </transition>
-    <transition enter-active-class='animated fadeOutDown' leave-active-class='animated fadeOutUp'>
+    
+    <transition :duration='{ enter: 800, leave: 10 }'
+    enter-active-class='animated fadeOutDown' 
+    leave-active-class='animated fadeOutUp'
+    v-on:after-leave='BackshowMain'
+    v-on:after-enter='ToshowMain'>
       <div class='title-box-2' v-show='Mainshow'>
+        <div class='guide' v-on:click='Mainshow = !Mainshow;'>
+          <router-link to='/'>
+              <p>Home</p>
+          </router-link>
+        </div>
         <keep-alive>
-          <router-view></router-view>
+          <router-view ref='header'></router-view>
         </keep-alive>
       </div>
     </transition>
+
+
   </div>
 </template>
 
@@ -51,30 +63,44 @@ export default {
   components: {
     welcome
   },
-  data: function () {
+  data() {
     return {
       Titleshow: false,
-      Mainshow: false
+      Mainshow: false,
+      mainopacity : 0
     }
   },
   methods: {
-    afterLeave: function () {
+    afterLeave() {
+      this.mainopacity = 0;
       this.Mainshow = true
+    },
+    BackshowMain(){
+      this.Titleshow = true;
+      console.log('after-leave');
+    },
+    ToshowMain(){
+      console.log('after-enter');
     }
   },
   mounted () {
     this.Titleshow = true
-    this.Mainshow = true
+    console.log(this.$refs.header)
+    console.log(this.$children) 
   },
-  computed: {},
+  computed: {
+    Mainopacity (){
+      return this.mainopacity;
+    }
+  },
   watch: {
     $route (to, from) {
       if (
         from.path === '/ObjectCategory' ||
         from.path === '/StoryLine' ||
-        (from.path === '/ThemeColor' && to.path === '/welcome')
+        (from.path === '/ThemeColor' && to.path === '/')
       ) {
-        this.Titleshow = true
+        console.log('path to /');
       }
     }
   }
@@ -94,7 +120,16 @@ export default {
 .title-box-2{
   width: 100%;
   height: auto;
+  animation:myfirst 1s;
+  /* opacity: 0; */
 }
+
+@keyframes myfirst
+{
+  from {opacity:0;}
+  to {opacity:1;}
+}
+
 .welcome-title-1 {
   font-family: Patriciana;
   font-size: 2rem;
@@ -126,13 +161,5 @@ export default {
   font-family: Patriciana;
   font-weight: bold;
   cursor: pointer;
-}
-
-.col-3 a {
-  text-decoration: none;
-}
-.col-3 a:visited {
-  text-decoration: none;
-  color: black;
 }
 </style>
