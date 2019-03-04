@@ -6,7 +6,7 @@
       <span class="btn" v-on:click='drawAfter'>After | </span>
       <span class="btn" v-on:click='drawAll'>All</span>
     </div>
-    <span class="bgText">123</span>
+    <span class="bgText">View Times</span>
     <svg id="color_svg">
     </svg>
   </div>
@@ -71,7 +71,6 @@
         const xAxis = this.xAxis;
         const y1Axis = this.y1Axis;
         const EleTran = 0;
-        const width = this.width;
   
         svg.append("g")
           .attr("class", "axis x_axis")
@@ -162,29 +161,13 @@
              return x(new Date(d.s,0,1)) + 20;
            })
            .attr('y',20)
-           .on('mouseover',function(d){
-             d3.select(this)
-               .transition()
-               .duration(200)
-               .attr('opacity','0.3')
-               .attr('stroke','black')
-            d3.select('.bgText').html(d.name)
-           })
-           .on('mouseleave',function(){
-            d3.select(this)
-               .transition()
-               .duration(100)
-               .attr('opacity','0.1')
-               .attr('stroke','none')
-           })
+
       },
       DrawText(data) {
         const svg = this.svg;
         const height = this.height;
         const padding = this.padding;
         const x = this.x;
-        const y1 = this.y1;
-        const xAxis = this.xAxis;
         const EleTran = this.EleTran;
   
   
@@ -205,6 +188,62 @@
               return h - (h / 10 * i) + h / 10 + padding - 18;
             })
         }
+      },
+      DrawColors(data,index=0){
+        const svg = this.svg;
+        const height = this.height;
+        const padding = this.padding;
+        const x = this.x;
+        const interval = this.interval;
+
+        data = data[index];
+        var s = data.s;
+        var e = data.e;
+        var p = x(new Date(e,0,1)) - x(new Date(s,0,1));
+
+        var colorx = d3.scaleQuantize()
+        .domain([0 , p])
+        .range(data.colors.map(v=>{
+          return 'rgb('+v[0]+','+v[1]+','+v[2]+')';
+        }))
+        p = p/10;
+        var colornum=d3.range(10);
+
+        svg.append('g')
+          .attr('class','color_g')
+          .selectAll('.colorRect')
+          .data(colornum)
+          .enter()
+          .append('rect')
+          .attr('class', 'colorRect')
+          .attr('height', height/2)
+          .attr('x',function(d,i){
+            return x(new Date(s,0,1)) + (i)*p +padding
+          })
+          .attr('y',padding)
+          .attr('fill',function(d,i){
+            return  colorx((i)*p)
+          })
+          .transition()
+          .duration(300)
+          .attr('width',p)
+
+        d3.select('.color_g').append('rect')
+          .attr('x',function(d,i){
+            return x(new Date(s,0,1)) +padding
+          })
+          .attr('y',padding)
+          .attr('width',x(new Date(e,0,1)) - x(new Date(s,0,1)))
+          .attr('height', height/2)
+          .attr('fill','transparent')
+        .on('mouseleave',function(){
+            d3.selectAll('.colorRect')
+              .transition()
+               .duration(100)
+               .attr('fill','white')
+               .remove();
+            d3.select('.color_g').remove()
+          })
       },
       Update(data) {
         var e = new Date(new Date(data.e).setYear(new Date(data.e).getFullYear() + 10));
@@ -228,6 +267,7 @@
         const EleTran = 0;
         const interval = this.interval;
         const y1Axis = this.y1Axis;
+        const that = this;
   
         svg.select('.x_axis')
           .transition()
@@ -308,21 +348,6 @@
            })
            .attr('y',20)
            .attr('height', height/2)
-          .on('mouseover',function(d){
-             d3.select(this)
-               .transition()
-               .duration(200)
-               .attr('opacity','0.3')
-               .attr('stroke','black')
-            d3.select('.bgText').html(d.name)
-           })
-           .on('mouseleave',function(){
-            d3.select(this)
-               .transition()
-               .duration(100)
-               .attr('opacity','0.1')
-               .attr('stroke','none')
-           })
            .transition()
            .duration(interval)
            .attr('fill',function(d){
@@ -338,6 +363,29 @@
            .duration(interval)
            .attr('width', 0)
            .remove()
+
+          d3.selectAll('.bgc')
+          .on('click',function(d,i){
+            if(d3.selectAll('.colorRect')._groups[0].length==0){
+              that.DrawColors(data.finalcolor,i);
+            }
+          })
+          .on('mouseover',function(d,i){
+             d3.select(this)
+               .transition()
+               .duration(200)
+               .attr('opacity','0.3')
+               .attr('stroke','black')
+            d3.select('.bgText').html(d.name)
+           })
+           .on('mouseout',function(){
+            d3.select(this)
+               .transition()
+               .duration(100)
+               .attr('opacity','0.1')
+               .attr('stroke','none')
+              d3.select('.bgText').html('View Times')
+           })
       }
     },
     mounted() {
@@ -349,6 +397,7 @@
           this.init(data.all);
           this.DrawDescription(data.all);
           this.DrawAxis(data.all);
+          this.Update(data.all);
         }
       }, 10)
     }
@@ -380,7 +429,7 @@
   }
   
   .bgText{
-position: absolute;
+    position: absolute;
     left: 50%;
     transform: translate(-50%,-50%);
     font-size: 5rem;
