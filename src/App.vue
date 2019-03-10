@@ -19,8 +19,20 @@ export default {
         p : 1
       })
       .then(function(response) {
-        console.log(response.data);
+        console.log(response);
         that.$store.dispatch('getOridataAction',response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    axios
+      .post("api/storyDate", {
+        p : 1
+      })
+      .then(function(response) {
+        console.log(response.data)
+        that.$store.dispatch('getStorydataAction',response.data.res);
       })
       .catch(function(error) {
         console.log(error);
@@ -34,6 +46,10 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 html {
   font-size: calc(100vw / 65);

@@ -206,8 +206,8 @@
         .range(data.colors.map(v=>{
           return 'rgb('+v[0]+','+v[1]+','+v[2]+')';
         }))
-        p = p/10;
-        var colornum=d3.range(10);
+        p = p/50;
+        var colornum=d3.range(50);
 
         svg.append('g')
           .attr('class','color_g')

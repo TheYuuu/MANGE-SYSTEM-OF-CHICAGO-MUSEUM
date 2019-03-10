@@ -13,21 +13,31 @@ Vue.config.productionTip = false
 
 let store = new Vuex.Store({
   state: {
-    Oridata: {}
+    Oridata: {},
+    Storydata: {}
   },
   getters: {
     getOridata (state) {
       return state.Oridata
+    },
+    getStorydata (state) {
+      return state.Storydata
     }
   },
   mutations: {
     getOridataMutation (state, aim) {
       state.Oridata = aim
+    },
+    getStorydataMutation (state, aim) {
+      state.Storydata = aim
     }
   },
   actions: {
     getOridataAction (context, aim) {
       context.commit('getOridataMutation', aim)
+    },
+    getStorydataAction (context, aim) {
+      context.commit('getStorydataMutation', aim)
     }
   }
 })
