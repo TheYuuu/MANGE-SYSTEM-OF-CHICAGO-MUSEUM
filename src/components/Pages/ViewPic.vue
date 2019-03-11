@@ -1,14 +1,22 @@
 <template>
-  <div class="ViewPic" v-if="BackgroundShow">
-    <div class='mianpic'>
+  <transition
+    :duration="{ enter: 1000, leave: 800 }"
+    enter-active-class="animated fadeIn"
+    leave-active-class="animated fadeOut"
+  >
+    <div class="ViewPic" v-show="BackgroundShow">
+      <div class="mianpic">
         <div class="main">
           <div class="imgDiv">
-            <img :src="'http://localhost:3000/images/' + showPic.Imagetitle" 
-                  alt="loading" 
-                  class="showpic"
-                  id='showpic'>
+            <img
+              :src="'http://localhost:3000/images/' + showPic.Imagetitle"
+              alt="loading"
+              class="showpic"
+              id="showpic"
+            >
           </div>
-           <div class="InfDiv">
+          <div class="InfDiv">
+            <div class="InfContent">
               <p>Artist: {{showPic.Artist}}</p>
               <hr>
               <p>Title: {{showPic.Title}}</p>
@@ -33,110 +41,127 @@
               <hr>
               <p>Introduction: {{showPic['Introduction']}}</p>
               <hr>
+            </div>
           </div>
         </div>
         <div class="left PreAndNext" v-on:click="Pre()">Pre</div>
         <div class="right PreAndNext" v-on:click="Next()">Next</div>
+      </div>
+      <div class="list" id="list">
+        <ul class="list_ul" :style="{ left : Move + 'px' }">
+          <template>
+            <li
+              v-for="(item, index) in list"
+              :class="{choosed: index == showIndex}"
+              v-on:click="imgClick(index)"
+              :key="index"
+            >
+              <img :src="'http://localhost:3000/images/' + item.Imagetitle" alt>
+            </li>
+          </template>
+        </ul>
+      </div>
+      <span class="close" v-on:click="BackgroundShow = false">Close</span>
     </div>
-    <div class="list" id='list'>
-    <ul class="list_ul" :style="{ left : Move + 'px' }">
-      <template>
-          <li v-for='(item, index) in list' 
-              :class = "{choosed: index == showIndex}"  
-              v-on:click='showIndex = index'
-              :key = index>
-            <img :src="'http://localhost:3000/images/' + item.Imagetitle"  alt="">
-          </li>
-      </template>
-    </ul>
-    </div>
-    <span class='close' v-on:click="BackgroundShow = false">Close</span>
-  </div>
+  </transition>
 </template>
 
 <script>
-import * as d3 from 'd3'
+import * as d3 from "d3";
 export default {
-  name: 'ViewPic',
-  data:function(){
+  name: "ViewPic",
+  data: function() {
     return {
-      maxWidth:'',
-      Move:'0',
-      BackgroundShow:false,
-      showIndex:0,
-      list:[]
+      maxWidth: "",
+      Move: 0,
+      BackgroundShow: false,
+      showIndex: 0,
+      list: []
+    };
+  },
+  watch: {
+    showIndex() {
+      setTimeout(() => {
+        if (this.BackgroundShow) {
+          this.UlMove();
+        }
+      }, 100);
     }
   },
-  computed:{
-    getMove(){
+  computed: {
+    getMove() {
       return this.Move;
     },
-    showPic(){
-      return this.list[this.showIndex]
+    showPic() {
+      return this.list[this.showIndex];
     }
   },
-  methods:{
-    showMe(list, index){
+  methods: {
+    imgClick(index) {
+      this.showIndex = index;
+    },
+    showMe(list, index) {
       this.list = list;
       this.showIndex = index;
       this.BackgroundShow = true;
     },
-    Next(){
-      if (this.showIndex+1<this.list.length){
+    Next() {
+      if (this.showIndex + 1 < this.list.length) {
         this.showIndex++;
-        this.UlMove();
       }
     },
-    Pre(){
-      if (this.showIndex-1>=0){
+    Pre() {
+      if (this.showIndex - 1 >= 0) {
         this.showIndex--;
-        this.UlMove();
       }
     },
-    UlMove(){
-      if (document.getElementsByClassName("choosed")[0].getBoundingClientRect().right - this.maxWidth - 100 > 0){
-        this.Move = - 2 * document.getElementsByClassName("choosed")[0].offsetWidth;
-      }
-      else if (document.getElementsByClassName("choosed")[0].getBoundingClientRect().left - 100 < 0){
-        this.Move = 2 * document.getElementsByClassName("choosed")[0].offsetWidth;
+    UlMove() {
+      var imgw = document.getElementsByClassName("choosed")[0].offsetWidth;
+      var imgR = document
+        .getElementsByClassName("choosed")[0]
+        .getBoundingClientRect().right;
+      var imgL = document
+        .getElementsByClassName("choosed")[0]
+        .getBoundingClientRect().left;
+      if (this.maxWidth - imgR < 0) {
+        this.Move -= 300;
+      } else if (imgL - imgw < 0) {
+        this.Move += 300;
       }
     }
   },
-  mounted () {
-      this.maxWidth = document.getElementById("app").offsetWidth;
+  mounted() {
+    this.maxWidth = document.getElementById("app").offsetWidth;
   },
-  updated(){
-    if (this.BackgroundShow){
-      this.UlMove();
-    }
-  }
-}
+  updated() {}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-*{
-  transition:all 0.5s;
+* {
+  transition: all 0.5s;
 }
-.ViewPic{
+.ViewPic {
   width: 100%;
   height: 100vh;
   position: fixed;
-  top:0px;
-  left:0px;
+  top: 0px;
+  left: 0px;
   background: black;
   z-index: 999;
 }
 
-.showpic{
+.showpic {
+  max-width: 100%;
   max-height: 70vh;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform:  translate(calc(-50% - 100px), -50%);
+  transform: translate(-50%, -50%);
 }
 
-.mianpic{
+.mianpic {
   display: table-cell;
   width: 100vw;
   height: 80vh;
@@ -146,93 +171,108 @@ export default {
   vertical-align: middle;
 }
 
-.list{
-    width: 100%;
-    height: 20%;
+.list {
+  width: 100%;
+  height: 20%;
 }
 
-.list_ul{
-    height: 100%;
-    width: 100000px;
-    padding: 30px 0;
-    margin: 0 20px;
-    overflow: auto;
-    position: relative;
+.list_ul {
+  height: 100%;
+  width: 100000px;
+  padding: 30px 0;
+  margin: 0 20px;
+  overflow: auto;
+  position: relative;
 }
 
-.list_ul li{
+.list_ul li {
   height: 100%;
   float: left;
   margin: 0 3px;
   list-style: none;
 }
 
-.list_ul li:hover{
+.list_ul li:hover {
   margin: 0 5px;
   border: 2px solid #6494fb;
   height: 120%;
 }
 
-.list_ul img{
+.list_ul img {
   height: 100%;
 }
 
-.choosed{
-    margin: 0 10px;
-    border: 2px solid #6494fb;
-    height: 120%!important;
+.choosed {
+  margin: 0 10px;
+  border: 2px solid #6494fb;
+  height: 120% !important;
 }
 
-.PreAndNext{
+.PreAndNext {
   float: left;
-  color:white;
+  color: white;
   cursor: pointer;
-  user-select:none;
+  user-select: none;
   position: relative;
-  padding: 20% 0;  
+  padding: 20% 0;
 }
 
-.left{
-  width:150px;  
-  height: 100%;   
+.left {
+  width: 150px;
+  height: 100%;
   margin-left: -100%;
   left: -150px;
-}  
-.main{
-  width:100%;   
+}
+.main {
+  width: 100%;
   height: 100%;
   position: relative;
   float: left;
-}  
-.right{  
-  width:150px;  
-  height: 100%;   
+}
+.right {
+  width: 150px;
+  height: 100%;
   margin-left: -150px;
-  right:-150px;
-}  
-.close{
+  right: -150px;
+}
+.close {
   position: fixed;
-  top:10px;
-  right:50px;
+  top: 10px;
+  right: 50px;
   color: white;
   z-index: 10;
   cursor: pointer;
 }
 
-.imgDiv{
+.imgDiv {
   height: 100%;
   width: 70%;
+  position: relative;
   float: left;
-  color: white
+  color: white;
+  padding: 0px 10px;
 }
-.InfDiv{
-  max-height: 80vh;
+.InfDiv {
+  height: 100%;
   width: 30%;
   float: left;
   color: white;
+  position: relative;
   text-align: left;
-  font-size: 0.6rem;
+  font-size: 0.8rem;
+  overflow: hidden;
+  padding: 10px 10px;
+  transform: translate(-10%, 0%);
+}
+
+.InfContent {
+  width: 100%;
+  max-height: 80vh;
   overflow: auto;
-  padding: 10px 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 10px;
 }
 </style>
