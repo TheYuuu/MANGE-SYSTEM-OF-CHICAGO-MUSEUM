@@ -49,14 +49,11 @@
         </keep-alive>
       </div>
     </transition>
-
-
   </div>
 </template>
 
 <script>
 import welcome from '../Pages/welcome'
-import ThemeColor from '../Pages/ThemeColor'
 
 export default {
   name: 'home',
@@ -116,6 +113,7 @@ export default {
     font-weight: lighter;
     background: #efefef;
     color: white;
+    z-index: 10;
 }
 .guide p:hover{
     box-shadow: 2px 2px 5px #939e9e;

@@ -10,17 +10,24 @@
       </defs>
       <text id="centerText">Mouseover To View</text>
     </svg>
+    <ViewPic ref="ViewPic"></ViewPic>
   </div>
 </template>
 
 <script>
 import * as d3 from "d3";
 import { setTimeout } from 'timers';
+import ViewPic from './ViewPic'
+
 export default {
   name: "StoryLine",
+  components:{
+    ViewPic
+  },
   data: function() {
     return {
-      data: {}
+      data: {},
+      list:[]
     };
   },
   computed: {
@@ -35,6 +42,7 @@ export default {
         place.push(data[i].place);
       }
       place = Array.from(new Set(place));
+      console.log(place)
 
       this.svg = d3.select("#story_svg");
       this.width = document.getElementById("StoryLine").offsetWidth - 44;
@@ -127,6 +135,7 @@ export default {
         .attr("stroke", "black");
     },
     drawCircle(data) {
+      const that = this;
       const width = this.width;
       const height = this.height;
 
@@ -203,14 +212,6 @@ export default {
         })
         .on("click", function(d) {
           Ifclick = true;
-          d3.select(this)
-            .transition()
-            .duration(1000)
-            .attr("cx", width / 2)
-            .attr("cy", height / 2)
-            .attr("r", 0)
-            .remove();
-
           d3.select("#StoryLine")
             .append("img")
             .attr("id", "person")
@@ -242,10 +243,19 @@ export default {
           
           d3.select("#person")
             .style("top", height / 2 - (root.radius / 3) * 2 + "px")
-            .style("left",width / 2 -document.getElementById("person").offsetWidth / 2 + 20 + "px")
+            .style("left",width / 2 - document.getElementById("person").offsetWidth / 2 + 20 + "px")
             .transition()
             .duration(1000)
+            .delay(1000)
             .style("opacity", 1)
+
+          //-------------------------------
+
+         d3.selectAll(".circle")
+            .transition()
+            .duration(1000)
+            .attr("r", 0)
+            .remove();
 
           svg
             .selectAll("text")
@@ -257,16 +267,16 @@ export default {
             });
 
             var t = data[d.name].works;
+            that.list = data[d.name].works;
             var nodes2 = d3.range(t.length).map(function(d, i) {
-              return { name: t[i].Title, radius: 10 ,color:'rgb('+ t[i].color[0]+',' + t[i].color[1] + ',' + t[i].color[2] +')'};
+              return { 
+                name: t[i].Title, 
+                radius: 10 ,
+                color:'rgb('+ t[i].color[0]+',' + t[i].color[1] + ',' + t[i].color[2] +')',
+                num: i
+                };
             });
             nodes2.unshift(root);
-
-            d3.selectAll("circle")
-            .transition()
-            .duration(1000)
-            .attr("r", 0)
-            .remove();
 
           setTimeout(() => {
             drawForce(nodes2,1)
@@ -275,6 +285,8 @@ export default {
       }
 
       function drawForce(nodes,type) {
+        d3.select('.nodes').remove();
+        
         var simulation = d3
           .forceSimulation()
           .force("forceX",d3.forceX().strength(0.1).x(width * 0.5))
@@ -371,6 +383,9 @@ export default {
               })
               .on('mouseleave',function(){
                 svg.select('.titleText').remove()
+              })
+              .on('click',function(d){
+                  that.$refs.ViewPic.showMe(that.list,d.index-1);
               })
         }
        
