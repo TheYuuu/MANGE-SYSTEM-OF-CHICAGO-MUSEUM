@@ -19,7 +19,7 @@ export default {
         p : 1
       })
       .then(function(response) {
-        console.log(response);
+        console.log(response.data);
         that.$store.dispatch('getOridataAction',response.data);
       })
       .catch(function(error) {
