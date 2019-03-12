@@ -76,7 +76,9 @@ export default {
       Move: 0,
       BackgroundShow: false,
       showIndex: 0,
-      list: []
+      list: [{
+        Imagetitle:''
+      }]
     };
   },
   watch: {

@@ -1,5 +1,5 @@
 <template>
-  <div id="ThemeColor">
+  <div id="TimeLine">
     <div class="DateChange">
       <span>Renaissance: </span>
       <span class="btn" v-on:click='drawBefore'>Before | </span>
@@ -41,13 +41,13 @@
       },
       init(data) {
         this.svg = d3.select("#color_svg");
-        this.width = document.getElementById("ThemeColor").offsetWidth - 44;
-        this.height = document.getElementById("ThemeColor").offsetHeight - 44;
+        this.width = document.getElementById("TimeLine").offsetWidth - 44;
+        this.height = (document.getElementById("TimeLine").offsetHeight) - 44;
   
-        this.padding = 20;
-        this.interval = 1000;
+        this.padding = 22;
+        this.interval = 500;
         this.x = d3.scaleTime().range([0, this.width - this.padding - this.padding]);
-        this.y1 = d3.scaleLinear().range([(this.height / 2 - this.padding), 0]);
+        this.y1 = d3.scaleLinear().range([(this.height - this.padding - this.padding), 0]);
         this.y2 = d3.scaleLinear().range([this.height / 2 - this.padding, 0]);
   
         var e = new Date(new Date(data.e).setYear(new Date(data.e).getFullYear() + 10));
@@ -73,24 +73,24 @@
         const EleTran = 0;
   
         svg.append("g")
-          .attr("class", "axis x_axis")
-          .attr("transform", "translate(" + padding + ',' + (height / 2 + padding) + ")")
+          .attr("class", "axis tl_x_axis")
+          .attr("transform", "translate(" + padding + ',' + (height - padding) + ")")
           .attr("fill", "black")
           .call(xAxis);
 
         svg.append("g")
-          .attr("class", "axis y1_axis")
-          .attr("transform", "translate(" + (10) + ',' + (padding*2) + ")")
+          .attr("class", "axis tl_y_axis")
+          .attr("transform", "translate(" + (padding/2) + ',' + (padding) + ")")
           .attr("fill", "black")
           .call(y1Axis);
           
-        d3.select('.y1_axis')
-          .select('path')
-          .attr('stroke','none')
-        d3.select('.y1_axis')
-          .selectAll('line')
-          .attr('stroke','none')
-  
+        d3.selectAll('.tl_y_axis')
+            .select('path')
+            .attr('stroke','none')
+        d3.selectAll('.tl_y_axis')
+            .selectAll('line')
+            .attr('stroke','none')
+
         var linePath = d3.line()
           .x(function(d) {
             if (d.correct) {
@@ -136,12 +136,13 @@
             return y1(d.c);
           })
       },
-      DrawDescription(data) {
+      DrawDescription(data) { 
         const that = this;
         const svg = this.svg;
         const width = this.width;
         const height = this.height;
         const x = this.x;
+        const padding = this.padding;
 
         svg.append('g')
            .selectAll('rect')
@@ -156,11 +157,11 @@
            .attr('width',function(d){
              return x(new Date(d.e,0,1)) - x(new Date(d.s,0,1));
            })
-           .attr('height', height/2)
+           .attr('height', height - padding)
            .attr('x',function(d){
              return x(new Date(d.s,0,1)) + 20;
            })
-           .attr('y',20)
+           .attr('y',padding)
 
       },
       DrawText(data) {
@@ -216,7 +217,7 @@
           .enter()
           .append('rect')
           .attr('class', 'colorRect')
-          .attr('height', height/2)
+          .attr('height', height -padding*2)
           .attr('x',function(d,i){
             return x(new Date(s,0,1)) + (i)*p +padding
           })
@@ -234,7 +235,7 @@
           })
           .attr('y',padding)
           .attr('width',x(new Date(e,0,1)) - x(new Date(s,0,1)))
-          .attr('height', height/2)
+          .attr('height', height -padding*2)
           .attr('fill','transparent')
         .on('mouseleave',function(){
             d3.selectAll('.colorRect')
@@ -335,7 +336,7 @@
            .attr('width',function(d){
              return x(new Date(d.e,0,1)) - x(new Date(d.s,0,1));
            })
-           .attr('height', height/2)
+           .attr('height', height -padding*2)
            .attr('x',function(d){
              return x(new Date(d.s,0,1)) + 20;
            })
@@ -347,7 +348,7 @@
              return x(new Date(d.s,0,1)) + 20;
            })
            .attr('y',20)
-           .attr('height', height/2)
+           .attr('height', height -padding*2)
            .transition()
            .duration(interval)
            .attr('fill',function(d){
@@ -392,7 +393,7 @@
       var data = this.$store.getters.getOridata;
       console.log(data)
       var timer = setInterval(() => {
-        if (document.getElementById("ThemeColor").offsetWidth != 0) {
+        if (document.getElementById("TimeLine").offsetWidth != 0) {
           clearInterval(timer);
           this.init(data.all);
           this.DrawDescription(data.all);
@@ -406,9 +407,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  #ThemeColor {
+  #TimeLine {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     padding: 22px;
   }
   
@@ -418,6 +419,7 @@
   }
   
   .DateChange {
+    z-index: 99;
     position: absolute;
     left: 50%;
     transform: translateX(-60%);

@@ -11,21 +11,18 @@
         <p class='welcome-title-2'>Organized By</p>
         <div class='welcome-title-3'>
           <div class='col-3' v-on:click='Titleshow = !Titleshow'>
-            <router-link to='ObjectCategory'>
-              <p class='sm-p'>Object</p>
-              <p>category</p>
+            <router-link to='TagsView'>
+              <p class='sm-p'>TagsView</p>
             </router-link>
           </div>
           <div class='col-3' v-on:click='Titleshow = !Titleshow'>
-            <router-link to='StoryLine'>
-              <p class='sm-p'>Story</p>
-              <p>Line</p>
+            <router-link to='ArtistView'>
+              <p class='sm-p'>ArtistView</p>
             </router-link>
           </div>
           <div class='col-3' v-on:click='Titleshow = !Titleshow'>
-            <router-link to='ThemeColor'>
-              <p class='sm-p'>Theme</p>
-              <p>Color</p>
+            <router-link to='PreView'>
+              <p class='sm-p'>PreView</p>
             </router-link>
           </div>
         </div>

@@ -15,16 +15,16 @@ export default new Router({
     //   component: resolve => require(['../components/Pages/welcome'], resolve)
     // },
     {
-      path: '/ObjectCategory',
-      component: resolve => require(['../components/Pages/ObjectCategory'], resolve)
+      path: '/TagsView',
+      component: resolve => require(['../components/Pages/TagsView/TagsView'], resolve)
     },
     {
-      path: '/StoryLine',
-      component: resolve => require(['../components/Pages/StoryLine'], resolve)
+      path: '/ArtistView',
+      component: resolve => require(['../components/Pages/ArtistView/ArtistView'], resolve)
     },
     {
-      path: '/ThemeColor',
-      component: resolve => require(['../components/Pages/ThemeColor'], resolve)
+      path: '/PreView',
+      component: resolve => require(['../components/Pages/PreView/PreView'], resolve)
     }
   ]
 })

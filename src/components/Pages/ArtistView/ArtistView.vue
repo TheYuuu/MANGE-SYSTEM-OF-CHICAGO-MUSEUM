@@ -1,5 +1,5 @@
 <template>
-  <div id="StoryLine">
+  <div id="ArtistView">
     <svg id="story_svg">
       <defs>
         <template v-for="(item,index) in data">
@@ -20,7 +20,7 @@ import { setTimeout } from 'timers';
 import ViewPic from './ViewPic'
 
 export default {
-  name: "StoryLine",
+  name: "ArtistView",
   components:{
     ViewPic
   },
@@ -35,104 +35,14 @@ export default {
       return this.data;
     }
   },
-  methods: {
+  methods: {    
     init(data) {
-      var place = [];
-      for (var i = 0; i < data.length; i++) {
-        place.push(data[i].place);
-      }
-      place = Array.from(new Set(place));
-      console.log(place)
-
       this.svg = d3.select("#story_svg");
-      this.width = document.getElementById("StoryLine").offsetWidth - 44;
-      this.height = document.getElementById("StoryLine").offsetHeight - 44;
+      this.width = document.getElementById("ArtistView").offsetWidth - 44;
+      this.height = document.getElementById("ArtistView").offsetHeight - 44;
 
       this.padding = 20;
       this.interval = 1000;
-      this.x = d3
-        .scaleTime()
-        .range([0, (this.width - this.padding - this.padding) / 3]);
-      this.y1 = d3.scaleBand().range([this.height / 2 - this.padding, 0]);
-      this.y2 = d3.scaleLinear().range([this.height / 2 - this.padding, 0]);
-
-      this.x.domain([new Date(data[0].s), new Date(data[data.length - 1].e)]);
-      this.y1.domain(place);
-
-      this.xAxis = d3.axisBottom(this.x);
-      this.y1Axis = d3.axisRight(this.y1);
-    },
-    drawAxis(data) {
-      const svg = this.svg;
-      const height = this.height;
-      const padding = this.padding;
-      const xAxis = this.xAxis;
-      const y1Axis = this.y1Axis;
-
-      svg
-        .append("g")
-        .attr("class", "axis x_axis")
-        .attr(
-          "transform",
-          "translate(" + padding + "," + (height / 2 + padding) + ")"
-        )
-        .attr("fill", "black")
-        .call(xAxis);
-
-      svg
-        .append("g")
-        .attr("class", "axis y1_axis")
-        .attr("transform", "translate(" + padding + "," + padding * 2 + ")")
-        .attr("fill", "black")
-        .call(y1Axis);
-    },
-    drawLine(data) {
-      const svg = this.svg;
-      const height = this.height;
-      const padding = this.padding;
-      const x = this.x;
-      const y1 = this.y1;
-
-      svg
-        .append("g")
-        .selectAll("line")
-        .data(data)
-        .enter()
-        .append("line")
-        .attr("class", function(d, i) {
-          return i + d.name;
-        })
-        .attr("x1", function(d) {
-          return x(new Date(d.s)) + padding;
-        })
-        .attr("y1", function(d) {
-          return y1(d.place) + padding + padding + 10;
-        })
-        .attr("x2", function(d) {
-          return x(new Date(d.e)) + padding;
-        })
-        .attr("y2", function(d) {
-          return y1(d.place) + padding + padding + 10;
-        })
-        .attr("stroke", "black");
-
-      svg
-        .append("g")
-        .selectAll("circle")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("cx", function(d) {
-          return x(new Date(d.s)) + padding;
-        })
-        .attr("cy", function(d) {
-          return y1(d.place) + padding + padding + 10;
-        })
-        .attr("r", function(d) {
-          return d.works.length / 10;
-        })
-        .attr("fill", "none")
-        .attr("stroke", "black");
     },
     drawCircle(data) {
       const that = this;
@@ -212,7 +122,7 @@ export default {
         })
         .on("click", function(d) {
           Ifclick = true;
-          d3.select("#StoryLine")
+          d3.select("#ArtistView")
             .append("img")
             .attr("id", "person")
             .attr("src", data[d.name].pic)
@@ -461,11 +371,9 @@ export default {
     this.data = data;
     var that = this;
     var timer = setInterval(() => {
-      if (document.getElementById("StoryLine").offsetWidth != 0) {
+      if (document.getElementById("ArtistView").offsetWidth != 0) {
         clearInterval(timer);
         that.init(data);
-        // that.drawAxis(data);
-        // that.drawLine(data);
         that.drawCircle(data);
       }
     }, 10);
@@ -475,7 +383,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#StoryLine {
+#ArtistView {
   width: 100%;
   height: 100vh;
   padding: 22px;
