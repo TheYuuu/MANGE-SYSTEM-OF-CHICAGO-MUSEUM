@@ -16,13 +16,13 @@
             </router-link>
           </div>
           <div class='col-3' v-on:click='Titleshow = !Titleshow'>
-            <router-link to='ArtistView'>
-              <p class='sm-p'>ArtistView</p>
+            <router-link to='PreView'>
+              <p class='sm-p'>PreView</p>
             </router-link>
           </div>
           <div class='col-3' v-on:click='Titleshow = !Titleshow'>
-            <router-link to='PreView'>
-              <p class='sm-p'>PreView</p>
+            <router-link to='ArtistView'>
+              <p class='sm-p'>ArtistView</p>
             </router-link>
           </div>
         </div>
