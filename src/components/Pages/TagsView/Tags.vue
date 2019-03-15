@@ -1,6 +1,6 @@
 <template>
-  <div class="Tags">
-      <svg id="tags_svg"></svg>
+  <div id="Tags" ref="Tags">
+      <svg id="tags_svg" ref="tags_svg"></svg>
   </div>
 </template>
 
@@ -17,28 +17,25 @@ export default {
     },    
     Start(){
      var data = this.$store.getters.getOridata;
-      console.log(data)
       var timer = setInterval(() => {
-        if (document.getElementById("Tags").offsetWidth != 0) {
-          // clearInterval(timer);
-          // this.init(data.all);
-          // this.DrawDescription(data.all);
-          // this.DrawAxis(data.all);
-          // this.Update(data.all);
-          console.log('1')
+        if (this.$refs.Tags.offsetWidth != 0) {
+          clearInterval(timer);
           this.init(data);
+          // do ...
         }
       }, 10)
     },
     init(data) {
-      this.svg = d3.select("#tags_svg");
+      const that = this;
+      this.svg = d3.select(that.$refs.tags_svg);
+
       this.width = document.getElementById("Tags").offsetWidth - 44;
       this.height = (document.getElementById("Tags").offsetHeight) - 44;
 
       this.padding = 22;
       this.interval = 500;
 
-      svg.append('text').text('12312312')
+      this.svg.append('text').html(that.arr.name).attr('x',100).attr('y',100)
     },
   },
   mounted () {
@@ -49,12 +46,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.Tags{
+#Tags{
   width: 100%;
   height: 100%;
   background: bisque;
 }
-.tags_svg{
+#tags_svg{
   width:100%;
   height:100%;
 }

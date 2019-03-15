@@ -15,12 +15,9 @@
         >
           <Tags :arr="list[index]"
                 @AddTags='AddTags'
-                :ref = "'Tag' + index"></Tags>
+                ref = "Tag"></Tags>
         </div>
       </transition-group>
-      <Tags :arr="list[0]"
-            @AddTags='AddTags'
-            ref = "Tag10"></Tags>
   </div>
 </template>
 
@@ -36,6 +33,7 @@ export default {
   },
   data: function() {
     return {
+      TagsMap:[],
       tags: [],
       showindex: 0,
       list: [
@@ -71,6 +69,13 @@ export default {
     Next() {
       if (this.showindex + 1 < this.list.length) {
         this.showindex++;
+        this.draw(this.showindex);
+      }
+    },
+    draw(index){
+      if (this.TagsMap[index] != 1){
+          this.$refs['Tag'][this.showindex].Start();
+          this.TagsMap[index] = 1;
       }
     }
   },
@@ -81,9 +86,7 @@ export default {
   },
   mounted() {
     // do
-      setTimeout(() => {
-        console.log(this.$refs['Tag0'].Start())
-      }, 10)
+     this.draw(0);
   }
 };
 </script>
