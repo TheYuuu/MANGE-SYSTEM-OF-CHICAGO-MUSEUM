@@ -1,10 +1,14 @@
 <template>
   <div class="ThemeColor">
       <dir class="main_view">
-        <MainPre></MainPre>
+        <MainPre ref='MainPre'></MainPre>
       </dir>
       <dir class="timeline">
-        <TimeLine></TimeLine>
+        <TimeLine 
+        @drawBefore='drawBefore'
+        @drawAfter='drawAfter'
+        @drawAll='drawAll'
+        @changeTimes='changeTimes'></TimeLine>
       </dir>
   </div>
 </template>
@@ -18,7 +22,21 @@ export default {
   components:{
     TimeLine,
     MainPre
-  }
+  },
+  methods: {
+    changeTimes(times){
+      this.$refs.MainPre.changeTimes(times)
+    },
+    drawBefore() {
+      this.$refs.MainPre.drawBefore()
+    },
+    drawAfter() {
+      this.$refs.MainPre.drawAfter()
+    },
+    drawAll() {
+      this.$refs.MainPre.drawAfter()
+    },
+  },
 }
 </script>
 

@@ -18,7 +18,11 @@
     name: "layout",
     props: {
       msg: String,
-      data: {}
+    },
+    data:function(){
+      return {
+        data: {}
+      }
     },
     computed: {
       getdata() {
@@ -28,16 +32,16 @@
     created() {},
     methods: {
       drawBefore() {
-        let data = this.$store.getters.getOridata;
-        this.Update(data.b)
+        this.Update(this.data.b)
+        this.$emit('drawBefore')
       },
       drawAfter() {
-        let data = this.$store.getters.getOridata;
-        this.Update(data.e)
+        this.Update(this.data.e)
+        this.$emit('drawAfter')
       },
       drawAll() {
-        let data = this.$store.getters.getOridata;
-        this.Update(data.all)
+        this.Update(this.data.all)
+        this.$emit('drawAll')
       },
       init(data) {
         this.svg = d3.select("#color_svg");
@@ -84,10 +88,10 @@
           .attr("fill", "black")
           .call(y1Axis);
           
-        d3.selectAll('.tl_y_axis')
+        svg.selectAll('.tl_y_axis')
             .select('path')
             .attr('stroke','none')
-        d3.selectAll('.tl_y_axis')
+        svg.selectAll('.tl_y_axis')
             .selectAll('line')
             .attr('stroke','none')
 
@@ -167,17 +171,7 @@
            .attr('y',padding)
       },
       Update(data) {
-        var e = new Date(new Date(data.e).setYear(new Date(data.e).getFullYear() + 10));
-        this.x.domain([new Date(data.b), e]);
-        this.y1.domain([0,
-          d3.max(data.map, function(x) {
-            return x.c;
-          })
-        ]);
-  
-        this.EleTran = this.x(new Date(new Date(data.b).getFullYear() + data.Datapadding, 0, 1)) / 2;
-        this.xAxis = d3.axisBottom(this.x);
-        this.y1Axis = d3.axisRight(this.y1);
+        this.init(data)
 
         const svg = this.svg;
         const height = this.height;
@@ -200,10 +194,10 @@
           .duration(interval)
           .call(y1Axis);
         
-        d3.select('.tl_y_axis')
+        svg.select('.tl_y_axis')
           .select('path')
           .attr('stroke','none')
-        d3.select('.tl_y_axis')
+        svg.select('.tl_y_axis')
           .selectAll('line')
           .attr('stroke','none')
   
@@ -291,10 +285,10 @@
            .attr('width', 0)
            .remove()
 
-          d3.selectAll('.bgc')
+          svg.selectAll('.bgc')
           .on('click',function(d,i){
-            if(d3.selectAll('.colorRect')._groups[0].length==0){
-              console.log(d);
+            if(svg.selectAll('.colorRect')._groups[0].length==0){
+              that.$emit('changeTimes',{d,i});
             }
           })
           .on('mouseover',function(d,i){
@@ -311,12 +305,13 @@
                .duration(100)
                .attr('opacity','0.1')
                .attr('stroke','none')
-              d3.select('.bgText').html('View Times')
+              svg.select('.bgText').html('View Times')
            })
       }
     },
     mounted() {
       var data = this.$store.getters.getOridata;
+      this.data = data;
       var timer = setInterval(() => {
         if (document.getElementById("TimeLine").offsetWidth != 0) {
           clearInterval(timer);
