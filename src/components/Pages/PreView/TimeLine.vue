@@ -150,8 +150,11 @@
            .enter()
            .append('rect')
            .attr('class','bgc')
-           .attr('fill',function(d){
-             return d.color;
+           .attr('fill',function(d,i){
+             if (i%2==0)
+                return 'grey';
+             else
+                return 'black';
            })
            .attr('opacity','0.1')
            .attr('width',function(d){
@@ -162,89 +165,6 @@
              return x(new Date(d.s,0,1)) + 20;
            })
            .attr('y',padding)
-
-      },
-      DrawText(data) {
-        const svg = this.svg;
-        const height = this.height;
-        const padding = this.padding;
-        const x = this.x;
-        const EleTran = this.EleTran;
-  
-  
-        let h = (height / 2 - padding);
-        for (var i = 0; i < data.map.length; i++) {
-          svg.append('g')
-            .selectAll('text')
-            .data(data.map[i].titles.slice(0, 10))
-            .enter()
-            .append('text')
-            .text(function(d) {
-              return d.content;
-            })
-            .attr("x", function(d) {
-              return EleTran + x(new Date(data.map[i].Date));
-            })
-            .attr("y", function(d, i) {
-              return h - (h / 10 * i) + h / 10 + padding - 18;
-            })
-        }
-      },
-      DrawColors(data,index=0){
-        const svg = this.svg;
-        const height = this.height;
-        const padding = this.padding;
-        const x = this.x;
-        const interval = this.interval;
-
-        data = data[index];
-        var s = data.s;
-        var e = data.e;
-        var p = x(new Date(e,0,1)) - x(new Date(s,0,1));
-
-        var colorx = d3.scaleQuantize()
-        .domain([0 , p])
-        .range(data.colors.map(v=>{
-          return 'rgb('+v[0]+','+v[1]+','+v[2]+')';
-        }))
-        p = p/50;
-        var colornum=d3.range(50);
-
-        svg.append('g')
-          .attr('class','color_g')
-          .selectAll('.colorRect')
-          .data(colornum)
-          .enter()
-          .append('rect')
-          .attr('class', 'colorRect')
-          .attr('height', height -padding*2)
-          .attr('x',function(d,i){
-            return x(new Date(s,0,1)) + (i)*p +padding
-          })
-          .attr('y',padding)
-          .attr('fill',function(d,i){
-            return  colorx((i)*p)
-          })
-          .transition()
-          .duration(300)
-          .attr('width',p)
-
-        d3.select('.color_g').append('rect')
-          .attr('x',function(d,i){
-            return x(new Date(s,0,1)) +padding
-          })
-          .attr('y',padding)
-          .attr('width',x(new Date(e,0,1)) - x(new Date(s,0,1)))
-          .attr('height', height -padding*2)
-          .attr('fill','transparent')
-        .on('mouseleave',function(){
-            d3.selectAll('.colorRect')
-              .transition()
-               .duration(100)
-               .attr('fill','white')
-               .remove();
-            d3.select('.color_g').remove()
-          })
       },
       Update(data) {
         var e = new Date(new Date(data.e).setYear(new Date(data.e).getFullYear() + 10));
@@ -270,20 +190,20 @@
         const y1Axis = this.y1Axis;
         const that = this;
   
-        svg.select('.x_axis')
+        svg.select('.tl_x_axis')
           .transition()
           .duration(interval)
           .call(xAxis);
 
-        svg.select('.y1_axis')
+        svg.select('.tl_y_axis')
           .transition()
           .duration(interval)
           .call(y1Axis);
         
-        d3.select('.y1_axis')
+        d3.select('.tl_y_axis')
           .select('path')
           .attr('stroke','none')
-        d3.select('.y1_axis')
+        d3.select('.tl_y_axis')
           .selectAll('line')
           .attr('stroke','none')
   
@@ -329,8 +249,11 @@
           
           rects.transition()
            .duration(interval)
-           .attr('fill',function(d){
-             return d.color;
+           .attr('fill',function(d,i){
+             if (i%2==0)
+                return 'grey';
+             else
+                return 'black';
            })
            .attr('opacity','0.1')
            .attr('width',function(d){
@@ -351,8 +274,11 @@
            .attr('height', height -padding*2)
            .transition()
            .duration(interval)
-           .attr('fill',function(d){
-             return d.color;
+           .attr('fill',function(d,i){
+             if (i%2==0)
+                return 'grey';
+             else
+                return 'black';
            })
            .attr('opacity','0.1')
            .attr('width',function(d){
@@ -368,7 +294,7 @@
           d3.selectAll('.bgc')
           .on('click',function(d,i){
             if(d3.selectAll('.colorRect')._groups[0].length==0){
-              that.DrawColors(data.finalcolor,i);
+              console.log(d);
             }
           })
           .on('mouseover',function(d,i){
@@ -391,7 +317,6 @@
     },
     mounted() {
       var data = this.$store.getters.getOridata;
-      console.log(data)
       var timer = setInterval(() => {
         if (document.getElementById("TimeLine").offsetWidth != 0) {
           clearInterval(timer);

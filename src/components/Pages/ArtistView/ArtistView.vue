@@ -74,6 +74,8 @@ export default {
         var Ifclick = false;
         d3.selectAll(".circle")
         .on("mouseover", function(d) {
+        if (Ifclick) 
+              return;
           d3.select(this)
             .attr("stroke-width", "2px")
             .attr("r", d.radius + 20)
@@ -110,7 +112,8 @@ export default {
             .attr("r", d.radius)
             .attr("stroke-dasharray", "5,5");
 
-          if (!Ifclick) {
+          if (Ifclick) 
+              return;
             d3.select("#centerText")
               .text("Mouseover To View")
               .attr("x", function() {
@@ -118,7 +121,7 @@ export default {
               });
 
             d3.selectAll(".dateText").remove();
-          }
+          
         })
         .on("click", function(d) {
           Ifclick = true;

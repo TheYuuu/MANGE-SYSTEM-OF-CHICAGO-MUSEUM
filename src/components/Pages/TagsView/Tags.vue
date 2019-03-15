@@ -42,6 +42,7 @@ export default {
     },
   },
   mounted () {
+    console.log(this.arr)
   }
 }
 </script>

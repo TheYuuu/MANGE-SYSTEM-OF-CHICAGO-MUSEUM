@@ -64,8 +64,9 @@ export default {
     },
   },
   mounted(){
-    var data = this.$store.getters.getStorydata;
+    var data = this.$store.getters.getOridata;
     this.data = data;
+    console.log(data)
     var that = this;
     var timer = setInterval(() => {
       if (document.getElementById("MainPre").offsetWidth != 0) {
