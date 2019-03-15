@@ -14,15 +14,21 @@
           v-show="index == getShowIndex"
         >
           <Tags :arr="list[index]"
-                @AddTags='AddTags'></Tags>
+                @AddTags='AddTags'
+                :ref = "'Tag' + index"></Tags>
         </div>
       </transition-group>
+      <Tags :arr="list[0]"
+            @AddTags='AddTags'
+            ref = "Tag10"></Tags>
   </div>
 </template>
 
 <script>
-import * as d3 from "d3";
 import Tags from "./Tags";
+import { appendFile } from 'fs';
+import { inherits } from 'util';
+import { setTimeout } from 'timers';
 export default {
   name: "TagsView",
   components: {
@@ -31,7 +37,7 @@ export default {
   data: function() {
     return {
       tags: [],
-      showindex: 1,
+      showindex: 0,
       list: [
         {
           name: "Artist",
@@ -75,6 +81,9 @@ export default {
   },
   mounted() {
     // do
+      setTimeout(() => {
+        console.log(this.$refs['Tag0'].Start())
+      }, 10)
   }
 };
 </script>
@@ -107,5 +116,10 @@ export default {
   z-index: 99;
   cursor: pointer;
   user-select: none;
+}
+#tags_svg{
+  background: black;
+  position: absolute;
+  top:50%;
 }
 </style>
