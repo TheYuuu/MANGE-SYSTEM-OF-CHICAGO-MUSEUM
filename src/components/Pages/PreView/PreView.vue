@@ -1,5 +1,5 @@
 <template>
-  <div class="ThemeColor">
+  <div class="PreView">
       <dir class="main_view">
         <MainPre ref='MainPre'></MainPre>
       </dir>
@@ -42,7 +42,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.ThemeColor{
+.PreView{
     width: 100%;
     height: 100vh;
     padding: 22px;

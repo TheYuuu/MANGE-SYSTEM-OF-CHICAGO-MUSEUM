@@ -1,20 +1,53 @@
 <template>
   <div id="MainPre">
-    <svg id="MainPre_svg"></svg>
+    <div class="showWord" v-on:click='showWords()'>
+      <span>Show Word</span>
+    </div>
+    <transition
+      :duration='{ enter: 1000, leave: 800 }'
+      enter-active-class='animated fadeInDown'
+      leave-active-class='animated fadeOutUp'>
+        <svg v-show='!getshowWord' id="MainPre_svg"></svg>
+    </transition>
+      <transition
+      :duration='{ enter: 1000, leave: 800 }'
+      enter-active-class='animated fadeInDown'
+      leave-active-class='animated fadeOutUp'>
+        <WordCloud v-show='getshowWord' ref='WordCloud'></WordCloud>
+    </transition>
   </div>
 </template>
 
 <script>
 import * as d3 from "d3";
 import { setTimeout } from 'timers';
+
+import WordCloud from './WordCloud'
+
 export default {
   name: 'MainPre',
   data:function(){
     return {
-      type:'all'
+      type:'all',
+      showWord:false,
+      textContent:[]
+    }
+  },
+  components: {
+    WordCloud
+  },
+  computed:{
+    getshowWord(){
+      if (this.showWord){
+        this.$refs.WordCloud.draw();
+      }
+      return this.showWord;
     }
   },
   methods:{
+    showWords(){
+      this.showWord = ! this.showWord
+    },
     changeTimes(times){
       this.Update(this.data[this.type].timecountry[times.i])
     },
@@ -200,9 +233,9 @@ export default {
     var timer = setInterval(() => {
       if (document.getElementById("MainPre").offsetWidth != 0) {
         clearInterval(timer);
-        that.init(data.b);
-        that.drawRect(data.b);
-        that.drawAxis(data.b);
+        that.init(data.all);
+        that.drawRect(data.all);
+        that.drawAxis(data.all);
       }
     }, 10);
   }
@@ -219,5 +252,14 @@ export default {
 #MainPre_svg{
     width: 100%;
     height: 100%;
+}
+.showWord {
+  z-index: 99;
+  position: absolute;
+  left: 50%;
+  transform:translateX(-50%);
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
 }
 </style>
