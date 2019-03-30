@@ -1,19 +1,16 @@
 <template>
   <div id="MainPre">
-    <div class="showWord" v-on:click='showWords()'>
-      <span>Show Word</span>
-    </div>
     <transition
-      :duration='{ enter: 1000, leave: 800 }'
-      enter-active-class='animated fadeInDown'
-      leave-active-class='animated fadeOutUp'>
+      :duration='{ enter: 1000, leave: 100 }'
+      enter-active-class='animated fadeIn'
+      leave-active-class='animated fadeOut'>
         <svg v-show='!getshowWord' id="MainPre_svg"></svg>
     </transition>
       <transition
-      :duration='{ enter: 1000, leave: 800 }'
+      :duration='{ enter: 1000, leave: 100 }'
       enter-active-class='animated fadeInDown'
-      leave-active-class='animated fadeOutUp'>
-        <WordCloud v-show='getshowWord' ref='WordCloud'></WordCloud>
+      leave-active-class='animated fadeOut'>
+        <WordCloud v-show='getshowWord' ref='WordCloud' @showWords='showWords()'></WordCloud>
     </transition>
   </div>
 </template>
@@ -30,7 +27,8 @@ export default {
     return {
       type:'all',
       showWord:false,
-      textContent:[]
+      textContent:[],
+      DateShow:1
     }
   },
   components: {
@@ -38,14 +36,17 @@ export default {
   },
   computed:{
     getshowWord(){
-      if (this.showWord){
-        this.$refs.WordCloud.draw();
-      }
       return this.showWord;
     }
   },
   methods:{
+    Datechange(){
+      this.DateShow = this.DateShow ? 0 : 1;
+      console.log(d3.select('.bgText'))
+      d3.select('.bgText').style('opacity',this.DateShow);
+    },
     showWords(){
+      this.Datechange();
       this.showWord = ! this.showWord
     },
     changeTimes(times){
@@ -93,6 +94,8 @@ export default {
       const xAxis = this.xAxis;
       const yAxis = this.yAxis;
       const interval = this.interval;
+
+
       svg
         .append("g")
         .attr("class", "axis main_y_axis")
@@ -119,6 +122,7 @@ export default {
       const y = this.y;
       const axisstep = this.axisstep
       const rectWidth = this.rectWidth
+      const that = this;
 
       for (let i=0;i<data.allcountrys.length;i++){
         var color = d3.scaleQuantile()
@@ -146,6 +150,15 @@ export default {
         })
         .attr('y', function(d,j){
           return y(data.allcountrys[i].works.length) + ( (height - y(data.allcountrys[i].works.length)) / data.allcountrys[i].color.length * j)  - padding
+        })
+        .on('click',function(d){
+          that.showWords()
+          if (that.showWord){
+            setTimeout(()=>{
+              that.$refs.WordCloud.draw(data.allcountrys[i].titles);
+            },1000)
+
+          }
         })
       }
     },

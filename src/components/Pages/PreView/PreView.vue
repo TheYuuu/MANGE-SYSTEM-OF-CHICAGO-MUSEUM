@@ -1,15 +1,16 @@
 <template>
   <div class="PreView">
-      <dir class="main_view">
+      <div class="main_view">
         <MainPre ref='MainPre'></MainPre>
-      </dir>
-      <dir class="timeline">
+      </div>
+      <div class="timeline">
         <TimeLine 
         @drawBefore='drawBefore'
         @drawAfter='drawAfter'
         @drawAll='drawAll'
-        @changeTimes='changeTimes'></TimeLine>
-      </dir>
+        @changeTimes='changeTimes'>
+        </TimeLine>
+      </div>
   </div>
 </template>
 
@@ -34,7 +35,7 @@ export default {
       this.$refs.MainPre.drawAfter()
     },
     drawAll() {
-      this.$refs.MainPre.drawAfter()
+      this.$refs.MainPre.drawAll()
     },
   },
 }

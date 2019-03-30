@@ -1,5 +1,10 @@
 <template>
-  <div id="WordCloud">12312312312312</div>
+  <div class = 'WordCloud'>
+    <div class="backword" v-on:click="showWords">
+      <span>Back</span>
+    </div>
+    <div id="WordCloud">12312312312312</div>
+  </div>
 </template>
 
 <script>
@@ -10,8 +15,12 @@ export default {
   name: "WordCloud",
   components: {},
   methods: {
+    showWords(){
+      this.$emit('showWords');
+    },
     draw(data) {
-        d3.select('#WordCloud').select('div').remove();
+      console.log(data);
+
       var chart = echarts.init(document.getElementById("WordCloud"));
 
       chart.setOption({
@@ -21,8 +30,8 @@ export default {
             shape: "circle",
             left: "center",
             top: "center",
-            width: "70%",
-            height: "80%",
+            width: "90%",
+            height: "90%",
             right: null,
             bottom: null,
             sizeRange: [12, 60],
@@ -58,24 +67,7 @@ export default {
               }
             },
 
-            data: [
-              {
-                name: "Farrah Abraham",
-                value: 366,
-                textStyle: {
-                  normal: {},
-                  emphasis: {}
-                }
-              },
-              {
-                name: "Farrah Abraham1231231",
-                value: 366,
-                textStyle: {
-                  normal: {},
-                  emphasis: {}
-                }
-              }
-            ]
+            data: data
           }
         ]
       });
@@ -92,4 +84,14 @@ export default {
   height: 100%;
   padding: 22px;
 }
+.WordCloud{
+    width: 100%;
+  height: 100%;
+}
+.backword{
+  position: absolute;
+  left: 50%;
+  top: 0;
+}
+
 </style>
