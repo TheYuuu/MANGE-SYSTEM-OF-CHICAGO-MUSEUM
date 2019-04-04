@@ -7,6 +7,15 @@ import router from './router'
 
 import './assets/animate.css'
 
+// eslint-disable-next-line import/no-duplicates
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+// eslint-disable-next-line import/no-duplicates
+import { Slider, Button, Carousel } from 'element-ui'
+Vue.use(ElementUI)
+Vue.use(Button)
+Vue.use(Slider)
+Vue.use(Carousel)
 Vue.use(Vuex)
 
 Vue.config.productionTip = false
@@ -14,7 +23,8 @@ Vue.config.productionTip = false
 let store = new Vuex.Store({
   state: {
     Oridata: {},
-    Storydata: {}
+    Storydata: {},
+    Tagdata: {}
   },
   getters: {
     getOridata (state) {
@@ -22,6 +32,9 @@ let store = new Vuex.Store({
     },
     getStorydata (state) {
       return state.Storydata
+    },
+    getTagdata (state) {
+      return state.Tagdata
     }
   },
   mutations: {
@@ -30,6 +43,9 @@ let store = new Vuex.Store({
     },
     getStorydataMutation (state, aim) {
       state.Storydata = aim
+    },
+    getTagdataMutation (state, aim) {
+      state.Tagdata = aim
     }
   },
   actions: {
@@ -38,6 +54,9 @@ let store = new Vuex.Store({
     },
     getStorydataAction (context, aim) {
       context.commit('getStorydataMutation', aim)
+    },
+    getTagdataAction (context, aim) {
+      context.commit('getTagdataMutation', aim)
     }
   }
 })

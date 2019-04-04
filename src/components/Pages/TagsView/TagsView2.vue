@@ -62,6 +62,49 @@ export default {
           console.log(123);
           simulation.stop();
         },3000)
+        setTimeout(()=>{
+          
+            var nodes2 = d3.range(5000).map(function(d, i) {
+                return { name: i, radius: 4 };
+              });
+
+            var update;
+            update = svg.selectAll("circle").data(nodes2);
+
+            update.enter()      
+            .append("circle")
+            .attr("fill", 'black')
+            .attr("cx", function(d) {
+              return d.x;
+            })
+            .attr("cy", function(d) {
+              return d.y;
+            })
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended))
+            .attr("r", function(d) {
+              return d.radius;
+            })
+            
+            update.exit()
+              .transition()
+              .duration(1000) 
+              .attr('r', 0)
+              .remove()
+
+        simulation
+          .nodes(nodes2)
+          // .force("collide",d3.forceCollide().strength(0.5)
+          //     .radius(function(d) {
+          //       if (d.name == -1)
+          //         return d.radius + 10;
+          //       return d.radius + 5;
+          //     }).iterations(1).strength(0.3)
+          // )
+          .on("tick", ticked);
+        },3000)
 
         var node;
         node = svg

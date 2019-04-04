@@ -16,7 +16,7 @@ export default new Router({
     // },
     {
       path: '/TagsView',
-      component: resolve => require(['../components/Pages/TagsView/TagsView2'], resolve)
+      component: resolve => require(['../components/Pages/TagsView/TagsView3'], resolve)
     },
     {
       path: '/ArtistView',
