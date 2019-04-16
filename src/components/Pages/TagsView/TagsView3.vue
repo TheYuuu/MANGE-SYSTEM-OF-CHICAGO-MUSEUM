@@ -12,6 +12,11 @@
               :min="-1000"
               :max="2010">
             </el-slider>
+            <div style="font-size: 0.5rem;text-align: left;">
+              Artist:{{getselectA}}
+              <br>
+              Country:{{getselectC}}
+            </div>
            <el-carousel trigger="click" height="500px" :autoplay="false" indicator-position="outside">
             <el-carousel-item>
               Artists
@@ -19,8 +24,8 @@
               </div>
             </el-carousel-item>
             <el-carousel-item>
-              <div>
-                Artists
+              Country
+              <div id="Country">
               </div>
             </el-carousel-item>
           </el-carousel>
@@ -29,7 +34,7 @@
           <el-button v-on:click="recover()">Recover</el-button>
           </div>
       </div>
-      <span v-on:click="show()">o</span>
+      <span v-on:click="show()">Pick me Pick me up</span>
     </div> 
     <div class="content">
     <div v-for='(item, key) in rows' :key=key  class="rows" v-on:click="click()"
@@ -37,9 +42,12 @@
       <img v-for='(i, key2) in item' :key=key2
         class="cols"
         :style ="{ background :'rgb('+i.color[0]+','+i.color[1]+','+i.color[2]+')' }" 
-        :class={hover:i.hover}>
+        :class="setClass(key,key2)"
+        :src=i.src
+        @click="selectImg($event)">
     </div>
     </div>
+    <ViewPic ref="ViewPic"></ViewPic>
   </div>
 </template>
 
@@ -47,35 +55,55 @@
 import * as d3 from "d3";
 import echarts from "echarts";
 import echartsWordcloud from "echarts-wordcloud";
-import { setTimeout } from 'timers';
+import ViewPic from '../ArtistView/ViewPic'
 export default {
-  name: "TagsView",
+  name: "TagsView",  
+  components:{
+    ViewPic
+  },
   data: function() {
     return {
       rows:[],
       selectShow:0,
-      timeRange: [-1000, 1000],
-      artistMap:[]
+      timeRange: [-1000, 2010],
+      Map:{
+        artist:[],
+        country:[]
+      },
+      Check:{}
     };
   },
  methods: {
+   setClass(key,key2){
+      return key + "_" +key2;
+   },
+   selectImg($event){
+     var index = String($event.target.className).split(' ')[1].split('_')
+     this.$refs.ViewPic.showMe([this.rows[index[0]][index[1]]],0);
+     console.log(this.rows[index[0]][index[1]])
+   },
    show(){
     this.selectShow=this.selectShow==0?-101:0;
     if (this.selectShow == 0){
       setTimeout(()=>{
-        this.drawWord();
+        this.drawWord('Artists', this.$store.getters.getTagdata.artistMap, 'artist');
+        this.drawWord('Country', this.$store.getters.getTagdata.countryMap, 'country');
       },100)
     }
    },
    recover(){
     var data = this.$store.getters.getTagdata.re;
     this.rows = data; 
-    this.artistMap = this.$store.getters.getTagdata.artistMap
-    this.artistMapCheck = false;
+    this.timeRange = [-1000, 2010];
+    this.Map.artist = this.$store.getters.getTagdata.artistMap.map(v=>v.name);
+    this.Check.artist = false;
+
+    this.Map.country = this.$store.getters.getTagdata.countryMap.map(v=>v.name);
+    this.Check.country = false;
    },
-   drawWord(){
+   drawWord(div,data,arr){
     const that =this;
-    var chart = echarts.init(document.getElementById("Artists"));
+    var chart = echarts.init(document.getElementById(div));
     chart.setOption({
       series: [
         {
@@ -119,21 +147,21 @@ export default {
               shadowColor: "#333"
             }
           },
-          data: that.$store.getters.getTagdata.artistMap
+          data: data
         }
       ]
     });
     chart.on('click', function (params) {
-      if (that.artistMapCheck!=true){
-        that.artistMap=[];
-        that.artistMapCheck = true;
+      if (that.Check[arr]!=true){
+        that.Map[arr] = [];
+        that.Check[arr] = true;
       }
-      that.artistMap.push(params.data.name);
+      that.Map[arr].push(params.data.name);
     })
    },
    select(){
     const that = this;
-    console.log(that.artistMap)
+    console.log(that.Map)
     axios
       .post("api/tagDate", {
         type:'select',
@@ -141,7 +169,8 @@ export default {
           s:that.timeRange[0],
           e:that.timeRange[1]
           },
-        artistMap:that.artistMap
+        artistMap:that.Map.artist,
+        countryMap:that.Map.country
       })
       .then(function(response) {
         var d = response.data.timeres;
@@ -156,13 +185,32 @@ export default {
    }
   },
   computed: {
-
+    getselectA(){
+      if (this.Map.artist.length!= 2670)
+        return this.Map.artist;
+    },
+    getselectC(){
+      if (this.Map.country.length!= 479)
+        return this.Map.country;
+    }
   },
   created(){
   },
   mounted() {
     //do
     this.recover();
+    this.rows[10][0].src = 'http://localhost:3000/images/' + this.rows[10][0].Imagetitle
+  },
+  beforeUpdate(){
+    this.loading = this.$loading({
+      lock: true,
+      text: 'Loading',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+    });
+  },
+  updated(){
+    this.loading.close();
   }
 };
 </script>
@@ -235,6 +283,10 @@ export default {
      background-color: #d3dce6;
   }
   #Artists{
+    width: 100%;
+    height: 100%;
+  }
+    #Country{
     width: 100%;
     height: 100%;
   }

@@ -11,11 +11,12 @@ import './assets/animate.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 // eslint-disable-next-line import/no-duplicates
-import { Slider, Button, Carousel } from 'element-ui'
+import { Slider, Button, Carousel, Loading  } from 'element-ui'
 Vue.use(ElementUI)
 Vue.use(Button)
 Vue.use(Slider)
 Vue.use(Carousel)
+Vue.use(Loading)
 Vue.use(Vuex)
 
 Vue.config.productionTip = false
