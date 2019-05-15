@@ -341,7 +341,7 @@ export default {
             .append("circle")
             .attr("transform", function(d, i) {
               if (i != 0)
-                return "translate(" + width/4 + "," + height/4 + ")";
+                return "translate(" + 0.5 * width + "," + 0.5 * height + ")";
             })
             .attr("stroke", "black")
             .attr("stroke-dasharray", "5,5")
