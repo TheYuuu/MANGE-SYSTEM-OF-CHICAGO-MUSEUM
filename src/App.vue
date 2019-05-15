@@ -14,29 +14,29 @@ export default {
   },
   mounted() {
     var that = this;
-    // axios
-    //   .post("api/dateOri", {
-    //     p : 1
-    //   })
-    //   .then(function(response) {
-    //     console.log(response.data);
-    //     that.$store.dispatch('getOridataAction',response.data);
-    //   })
-    //   .catch(function(error) {
-    //     console.log(error);
-    //   });
+    axios
+      .post("api/dateOri", {
+        p : 1
+      })
+      .then(function(response) {
+        console.log(response.data);
+        that.$store.dispatch('getOridataAction',response.data);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
 
-    // axios
-    //   .post("api/storyDate", {
-    //     p : 1
-    //   })
-    //   .then(function(response) {
-    //     console.log(response.data)
-    //     that.$store.dispatch('getStorydataAction',response.data.res);
-    //   })
-    //   .catch(function(error) {
-    //     console.log(error);
-    //   });
+    axios
+      .post("api/storyDate", {
+        p : 1
+      })
+      .then(function(response) {
+        console.log(response.data)
+        that.$store.dispatch('getStorydataAction',response.data.res);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
     
     axios
       .post("api/tagDate", {

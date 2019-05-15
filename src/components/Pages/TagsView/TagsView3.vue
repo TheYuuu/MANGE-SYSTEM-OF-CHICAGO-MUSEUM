@@ -36,7 +36,7 @@
       </div>
       <span v-on:click="show()">Pick me Pick me up</span>
     </div> 
-    <div class="content">
+    <div class="content" id="con">
     <div v-for='(item, key) in rows' :key=key  class="rows" v-on:click="click()"
       :style ="{ height: 'calc(100% / ' + rows.length + ')' }">
       <img v-for='(i, key2) in item' :key=key2
@@ -64,7 +64,7 @@ export default {
   data: function() {
     return {
       rows:[],
-      selectShow:0,
+      selectShow:-101,
       timeRange: [-1000, 2010],
       Map:{
         artist:[],
@@ -197,9 +197,10 @@ export default {
   created(){
   },
   mounted() {
+
     //do
     this.recover();
-    this.rows[10][0].src = 'http://localhost:3000/images/' + this.rows[10][0].Imagetitle
+    // this.rows[10][1].src = 'http://localhost:3000/images/' + this.rows[10][1].Imagetitle
   },
   beforeUpdate(){
     this.loading = this.$loading({
