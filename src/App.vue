@@ -58,10 +58,12 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: Patriciana;
 }
 html {
   font-size: calc(100vw / 65);
   font-family: Patriciana;
+  background: #f7f3ffb8;
 }
 svg{
   -webkit-transform: translate3d(0, 0, 0);
@@ -73,7 +75,7 @@ svg{
 a {
   text-decoration: none;
 }
-a:visited {
+a:link,a:visited,a:active,a:hover{
   text-decoration: none;
   color: black;
 }
